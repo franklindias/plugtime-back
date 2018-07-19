@@ -118,5 +118,7 @@ venv.bak/
 ### Python Patch ###
 .venv/
 
+.plugtime
+
 
 # End of https://www.gitignore.io/api/django,python
