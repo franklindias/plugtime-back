@@ -79,3 +79,40 @@ class ProjectTest(TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_project(self):
+        self.create_valid_project()
+        project_object = Project.objects.get()
+        response = self.client.delete(
+            reverse('project:project-rud', kwargs={'pk':project_object.pk}),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_invalid_project(self):
+        self.create_valid_project()
+        project_object = Project.objects.get()
+        response = self.client.delete(
+            reverse('project:project-rud', kwargs={'pk':2}),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_retrieve_project(self):
+        self.create_valid_project()
+        project_object = Project.objects.get()
+        response = self.client.get(
+            reverse('project:project-rud', kwargs={'pk':project_object.pk}),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], project_object.title)
+
+    def test_retrieve_invalid_project(self):
+        self.create_valid_project()
+        project_object = Project.objects.get()
+        response = self.client.get(
+            reverse('project:project-rud', kwargs={'pk':2}),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
