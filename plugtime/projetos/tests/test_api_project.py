@@ -64,7 +64,7 @@ class ProjectTest(TestCase):
         self.create_valid_project()
         project_object = Project.objects.get()
         response = self.client.put(
-            reverse('project:project-rud', kwargs={'pk':project_object.pk}),
+            reverse('project:projects-rud', kwargs={'pk':project_object.pk}),
             data=json.dumps(self.data_valid),
             content_type='application/json'
         )
@@ -74,7 +74,7 @@ class ProjectTest(TestCase):
         self.create_valid_project()
         project_object = Project.objects.get()
         response = self.client.put(
-            reverse('project:project-rud', kwargs={'pk':project_object.pk}),
+            reverse('project:projects-rud', kwargs={'pk':project_object.pk}),
             data=json.dumps(self.data_invalid),
             content_type='application/json'
         )
@@ -84,7 +84,7 @@ class ProjectTest(TestCase):
         self.create_valid_project()
         project_object = Project.objects.get()
         response = self.client.delete(
-            reverse('project:project-rud', kwargs={'pk':project_object.pk}),
+            reverse('project:projects-rud', kwargs={'pk':project_object.pk}),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -93,7 +93,7 @@ class ProjectTest(TestCase):
         self.create_valid_project()
         project_object = Project.objects.get()
         response = self.client.delete(
-            reverse('project:project-rud', kwargs={'pk':2}),
+            reverse('project:projects-rud', kwargs={'pk':2}),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -102,7 +102,7 @@ class ProjectTest(TestCase):
         self.create_valid_project()
         project_object = Project.objects.get()
         response = self.client.get(
-            reverse('project:project-rud', kwargs={'pk':project_object.pk}),
+            reverse('project:projects-rud', kwargs={'pk':project_object.pk}),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -112,7 +112,7 @@ class ProjectTest(TestCase):
         self.create_valid_project()
         project_object = Project.objects.get()
         response = self.client.get(
-            reverse('project:project-rud', kwargs={'pk':2}),
+            reverse('project:projects-rud', kwargs={'pk':2}),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

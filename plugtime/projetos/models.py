@@ -23,7 +23,7 @@ class Event(models.Model):
 
 
 class Participant(models.Model):
-    role = models.CharField(verbose_name="Função", max_length=255)
+    role = models.CharField(verbose_name="Função", max_length=255, null=False, blank=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name="Projeto")
 
     def __str__(self):
