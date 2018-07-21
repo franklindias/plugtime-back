@@ -6,7 +6,7 @@ from django.test import TestCase, Client
 from rest_framework import status
 
 from plugtime.projetos.models import Project
-from plugtime.projetos.serializers import ProjectSerializer
+from plugtime.projetos.serializers.project import ProjectSerializer
 
 
 class ProjectTest(TestCase):

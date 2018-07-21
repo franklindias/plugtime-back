@@ -1,6 +1,6 @@
 from django.urls import path
 
-from plugtime.projetos.api import ProjectListCreate, ProjectRetrieveUpdateDestroy
+from plugtime.projetos.api.project import ProjectListCreate, ProjectRetrieveUpdateDestroy
 
 app_name="projetos"
 
