@@ -26,32 +26,29 @@ class ParticipantTest(TestCase):
                 'role':"",
                 }
 
-    def create_valid_participant(self):
-        return self.client.post(
-            reverse('project:participants'),
-            data=json.dumps(self.data_valid),
-            content_type='application/json'
+    
+        self.response_valid_participant = self.client.post(
+                reverse('project:participants'),
+                data=json.dumps(self.data_valid),
+                content_type='application/json'
         )
 
-    def create_invalid_participant(self):
-        return self.client.post(
-            reverse('project:participants'),
-            data=json.dumps(self.data_invalid),
-            content_type='application/json'
+    
+        self.response_invalid_participant = self.client.post(
+                reverse('project:participants'),
+                data=json.dumps(self.data_invalid),
+                content_type='application/json'
         )
 
     def test_create_valid_participant(self):
-        response = self.create_valid_participant()
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.response_valid_participant.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Participant.objects.count(), 1)
         self.assertEqual(Participant.objects.get().role, "Programador")
 
     def test_create_invalid_participant(self):
-          response = self.create_invalid_participant()
-          self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+          self.assertEqual(self.response_invalid_participant.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_all_participants(self):
-      self.create_valid_participant()
       response = self.client.get(reverse('project:participants'))
       participants = Participant.objects.all()
       serializer = ParticipantSerializer(participants, many=True)
@@ -59,7 +56,6 @@ class ParticipantTest(TestCase):
       self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_valid_participant(self):
-      self.create_valid_participant()
       participant_object = Participant.objects.get()
       response = self.client.put(
           reverse('project:participants-rud', kwargs={'pk':participant_object.pk}),
@@ -69,7 +65,6 @@ class ParticipantTest(TestCase):
       self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_invalid_participant(self):
-      self.create_valid_participant()
       participant_object = Participant.objects.get()
       response = self.client.put(
           reverse('project:participants-rud', kwargs={'pk':participant_object.pk}),
@@ -79,7 +74,6 @@ class ParticipantTest(TestCase):
       self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_participant(self):
-      self.create_valid_participant()
       participant_object = Participant.objects.get()
       response = self.client.delete(
           reverse('project:participants-rud', kwargs={'pk':participant_object.pk}),
@@ -88,7 +82,6 @@ class ParticipantTest(TestCase):
       self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_invalid_participant(self):
-      self.create_valid_participant()
       participant_object = Participant.objects.get()
       response = self.client.delete(
           reverse('project:participants-rud', kwargs={'pk':2}),
@@ -97,7 +90,6 @@ class ParticipantTest(TestCase):
       self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_retrieve_participant(self):
-      self.create_valid_participant()
       participant_object = Participant.objects.get()
       response = self.client.get(
           reverse('project:participants-rud', kwargs={'pk':participant_object.pk}),
@@ -108,7 +100,6 @@ class ParticipantTest(TestCase):
       self.assertEqual(response.data, serializer.data)
 
     def test_retrieve_invalid_participant(self):
-      self.create_valid_participant()
       participant_object = Participant.objects.get()
       response = self.client.get(
           reverse('project:participants-rud', kwargs={'pk':2}),
