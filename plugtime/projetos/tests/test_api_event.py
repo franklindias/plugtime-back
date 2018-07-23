@@ -7,6 +7,7 @@ from django.utils import timezone
 from rest_framework import status
 
 from plugtime.projetos.models import Project, Participant, Event
+from plugtime.projetos.serializers.event import EventSerializer
 
 class EventTest(TestCase):
     def setUp(self):
@@ -56,4 +57,63 @@ class EventTest(TestCase):
         self.assertEqual(Event.objects.get().description, "Descrição do evento")
 
     def test_create_invalid_event(self):
-          self.assertEqual(self.response_invalid_event.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(self.response_invalid_event.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_all_events(self):
+      response = self.client.get(reverse('project:events'))
+      events = Event.objects.all()
+      serializer = EventSerializer(events, many=True)
+      self.assertEqual(response.data, serializer.data)
+      self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_valid_event(self):
+      event_object = Event.objects.get()
+      response = self.client.put(
+          reverse('project:events-rud', kwargs={'pk':event_object.pk}),
+          data=json.dumps(self.data_valid),
+          content_type='application/json'
+      )
+      self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_invalid_event(self):
+      event_object = Event.objects.get()
+      response = self.client.put(
+          reverse('project:events-rud', kwargs={'pk':event_object.pk}),
+          data=json.dumps(self.data_invalid),
+          content_type='application/json'
+      )
+      self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_event(self):
+      event_object = Event.objects.get()
+      response = self.client.delete(
+          reverse('project:events-rud', kwargs={'pk':event_object.pk}),
+          content_type='application/json'
+      )
+      self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_invalid_event(self):
+      event_object = Event.objects.get()
+      response = self.client.delete(
+          reverse('project:events-rud', kwargs={'pk':2}),
+          content_type='application/json'
+      )
+      self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_retrieve_event(self):
+      event_object = Event.objects.get()
+      response = self.client.get(
+          reverse('project:events-rud', kwargs={'pk':event_object.pk}),
+          content_type='application/json'
+      )
+      self.assertEqual(response.status_code, status.HTTP_200_OK)
+      serializer = EventSerializer(event_object, many=False)
+      self.assertEqual(response.data, serializer.data)
+
+    def test_retrieve_invalid_event(self):
+      event_object = Event.objects.get()
+      response = self.client.get(
+          reverse('project:events-rud', kwargs={'pk':2}),
+          content_type='application/json'
+      )
+      self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
