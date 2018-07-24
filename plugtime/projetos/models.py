@@ -3,9 +3,12 @@ from django.db import models
 # Create your models here.
 class Project(models.Model):
     title = models.CharField("Título", max_length=255, null=False, blank=False)
-    description = models.CharField("Título", max_length=255)
+    description = models.CharField("Descrição", max_length=255)
     estimated_time = models.PositiveSmallIntegerField(verbose_name="Tempo estimado")
-    time_value = models.DecimalField(max_digits=5, decimal_places=2)
+    time_value = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Valor da hora")
+
+    class Meta:
+        verbose_name = "Projeto"
 
     def __str__(self):
         return self.title

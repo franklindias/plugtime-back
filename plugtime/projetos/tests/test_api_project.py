@@ -114,3 +114,27 @@ class ProjectTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['estimated_time'], 30)
+
+    def test_ordering_list_project(self):
+        self.data_valid['estimated_time'] = 30
+        self.create_project(self.data_valid)
+        response = self.client.get(
+            '%s?ordering=estimated_time' % reverse('project:projects'),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['estimated_time'], 30)
+        self.assertEqual(response.data[1]['estimated_time'], 50)
+
+    def test_search_list_project(self):
+        self.data_valid['estimated_time'] = 30
+        self.create_project(self.data_valid)
+        response = self.client.get(
+            '%s?search=teste' % reverse('project:projects'),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['estimated_time'], 50)
+        self.assertEqual(response.data[1]['estimated_time'], 30)

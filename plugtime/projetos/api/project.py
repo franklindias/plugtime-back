@@ -13,9 +13,19 @@ class ProjectFilter(filters.FilterSet):
 
 
 class ProjectListCreate(generics.ListCreateAPIView):
+    """
+    get:
+    Retorna uma lista com todos os Projetos existentes.
+
+    post:
+    Cria uma nova instacia de Projeto.
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     filterset_class = ProjectFilter
+    ordering_fields = ('title', 'description', 'estimated_time', 'time_value', )
+    search_fields = ('title', 'description')
+
 
 class ProjectRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
